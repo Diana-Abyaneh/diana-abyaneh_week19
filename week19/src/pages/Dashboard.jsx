@@ -41,7 +41,7 @@ function Dashboard() {
       setLoading(true);
       setError(null);
       const result = await getProducts({ page, limit: 10 });
-      
+
       if (result && Array.isArray(result.data)) {
         setProducts(result.data);
         setTotalPages(result.totalPages || 1);
@@ -71,7 +71,7 @@ function Dashboard() {
     try {
       setLoading(true);
       const result = await getProducts({ page: 1, limit: 10, name: search });
-      
+
       if (result && Array.isArray(result.data)) {
         setProducts(result.data);
         setTotalPages(result.totalPages || 1);
@@ -89,7 +89,7 @@ function Dashboard() {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
@@ -170,8 +170,11 @@ function Dashboard() {
           className={styles.searchInput}
         />
         <span className={styles.userInfo}>
-          <h4>{userName}</h4>
-          <p>مدیر</p>
+          <img src={`https://avatar.iran.liara.run/username?username=${userName}`} />
+          <span>
+            <h4>{userName}</h4>
+            <p>مدیر</p>
+          </span>
         </span>
         <button onClick={handleLogout} className={styles.logoutBtn}>
           <CiLogout />
@@ -200,9 +203,7 @@ function Dashboard() {
       )}
 
       {products.length === 0 && !loading ? (
-        <div className={styles.emptyState}>
-          هیچ محصولی یافت نشد
-        </div>
+        <div className={styles.emptyState}>هیچ محصولی یافت نشد</div>
       ) : (
         <>
           <div className={styles.tableContainer}>
@@ -224,17 +225,27 @@ function Dashboard() {
                     <td>{p.price.toLocaleString()} هزار تومان</td>
                     <td>{p.id}</td>
                     <td>
-                      <button 
+                      <button
                         className={styles.actionBtn}
                         onClick={() => handleOpenEditModal(p)}
                       >
-                        <img src={editVector} alt="ویرایش" width={16} height={16} />
+                        <img
+                          src={editVector}
+                          alt="ویرایش"
+                          width={16}
+                          height={16}
+                        />
                       </button>
-                      <button 
+                      <button
                         className={styles.actionBtn}
                         onClick={() => handleOpenDeleteModal(p)}
                       >
-                        <img src={deleteVector} alt="حذف" width={16} height={16} />
+                        <img
+                          src={deleteVector}
+                          alt="حذف"
+                          width={16}
+                          height={16}
+                        />
                       </button>
                     </td>
                   </tr>
@@ -244,28 +255,30 @@ function Dashboard() {
           </div>
 
           <div className={styles.pagination}>
-            <button 
-              disabled={page === 1} 
+            <button
+              disabled={page === 1}
               onClick={() => setPage(page - 1)}
               className={styles.paginationArrow}
             >
               ‹
             </button>
-            
+
             <div className={styles.paginationPages}>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
-                <button
-                  key={pageNumber}
-                  onClick={() => setPage(pageNumber)}
-                  className={`${styles.paginationCircle} ${
-                    page === pageNumber ? styles.paginationCircleActive : ''
-                  }`}
-                >
-                  {pageNumber}
-                </button>
-              ))}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    onClick={() => setPage(pageNumber)}
+                    className={`${styles.paginationCircle} ${
+                      page === pageNumber ? styles.paginationCircleActive : ""
+                    }`}
+                  >
+                    {pageNumber}
+                  </button>
+                )
+              )}
             </div>
-            
+
             <button
               disabled={page === totalPages}
               onClick={() => setPage(page + 1)}
