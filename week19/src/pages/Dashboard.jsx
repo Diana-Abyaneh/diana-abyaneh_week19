@@ -9,8 +9,9 @@ import { getProducts } from "../services/products";
 import { addProduct } from "../services/addProducts";
 import { deleteProduct } from "../services/deleteProduct";
 import { editProduct } from "../services/editProduct";
-import ConfirmModal from "../components/AddModal";
+import AddModal from "../components/AddModal";
 import EditModal from "../components/EditModal";
+import DeleteModal from "../components/DeleteModal";
 import deleteVector from "../assets/trash.svg";
 import editVector from "../assets/edit.svg";
 import styles from "./dashboard.module.css";
@@ -27,7 +28,9 @@ function Dashboard() {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [deletingProduct, setDeletingProduct] = useState(null);
 
   useEffect(() => {
     fetchProducts();
@@ -104,6 +107,16 @@ function Dashboard() {
     setIsEditModalOpen(false);
   };
 
+  const handleOpenDeleteModal = (product) => {
+    setDeletingProduct(product);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setDeletingProduct(null);
+    setIsDeleteModalOpen(false);
+  };
+
   const handleAddProduct = async (productData) => {
     try {
       await addProduct(productData);
@@ -125,13 +138,12 @@ function Dashboard() {
   };
 
   const handleDeleteProduct = async (productId) => {
-    if (window.confirm("آیا از حذف این محصول اطمینان دارید؟")) {
-      try {
-        await deleteProduct(productId);
-        await fetchProducts();
-      } catch (error) {
-        setError(error.message);
-      }
+    try {
+      await deleteProduct(productId);
+      await fetchProducts();
+      handleCloseDeleteModal();
+    } catch (error) {
+      setError(error.message);
     }
   };
 
@@ -209,7 +221,7 @@ function Dashboard() {
                   <tr key={p.id}>
                     <td>{p.name}</td>
                     <td>{p.quantity || p.stock}</td>
-                    <td>{p.price.toLocaleString()} تومان</td>
+                    <td>{p.price.toLocaleString()} هزار تومان</td>
                     <td>{p.id}</td>
                     <td>
                       <button 
@@ -220,7 +232,7 @@ function Dashboard() {
                       </button>
                       <button 
                         className={styles.actionBtn}
-                        onClick={() => handleDeleteProduct(p.id)}
+                        onClick={() => handleOpenDeleteModal(p)}
                       >
                         <img src={deleteVector} alt="حذف" width={16} height={16} />
                       </button>
@@ -265,7 +277,7 @@ function Dashboard() {
         </>
       )}
 
-      <ConfirmModal
+      <AddModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onConfirm={handleAddProduct}
@@ -276,6 +288,13 @@ function Dashboard() {
         onClose={handleCloseEditModal}
         onConfirm={handleEditProduct}
         product={editingProduct}
+      />
+
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleDeleteProduct}
+        product={deletingProduct}
       />
     </div>
   );
