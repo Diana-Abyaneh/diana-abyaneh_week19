@@ -41,42 +41,51 @@ function LoginPage() {
   }, [navigate]);
 
   return (
-    <div className={styles.formContainer}>
-      <div className={styles.head}>
-        <img src={logo} alt="Botostart Logo" />
-        <h3>فرم ورود</h3>
-      </div>
+    <>
+      <header>
+        <h1>بوت کمپ بوتواستارت</h1>
+      </header>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={styles.inputsContainer}>
-          <input
-            type="text"
-            placeholder="نام کاربری"
-            {...register("username", { required: "نام کاربری الزامی است" })}
-          />
-          {errors.username && (
-            <span className={styles.error}>{errors.username.message}</span>
-          )}
-
-          <input
-            type="password"
-            placeholder="رمز عبور"
-            {...register("password", {
-              required: "رمز عبور الزامی است",
-              minLength: { value: 6, message: "رمز باید حداقل ۶ کاراکتر باشد" },
-            })}
-          />
-          {errors.password && (
-            <span className={styles.error}>{errors.password.message}</span>
-          )}
+      <div className={styles.formContainer}>
+        <div className={styles.head}>
+          <img src={logo} alt="Botostart Logo" />
+          <h3>فرم ورود</h3>
         </div>
 
-        <button type="submit">ورود</button>
-      </form>
-      <span className={styles.link}>
-        <Link to="/signup">ایجاد حساب کاربری!</Link>
-      </span>
-    </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className={styles.inputsContainer}>
+            <input
+              type="text"
+              placeholder="نام کاربری"
+              {...register("username", { required: "نام کاربری الزامی است" })}
+            />
+            {errors.username && (
+              <span className={styles.error}>{errors.username.message}</span>
+            )}
+
+            <input
+              type="password"
+              placeholder="رمز عبور"
+              {...register("password", {
+                required: "رمز عبور الزامی است",
+                minLength: {
+                  value: 6,
+                  message: "رمز باید حداقل ۶ کاراکتر باشد",
+                },
+              })}
+            />
+            {errors.password && (
+              <span className={styles.error}>{errors.password.message}</span>
+            )}
+          </div>
+
+          <button type="submit">ورود</button>
+        </form>
+        <span className={styles.link}>
+          <Link to="/signup">ایجاد حساب کاربری!</Link>
+        </span>
+      </div>
+    </>
   );
 }
 
