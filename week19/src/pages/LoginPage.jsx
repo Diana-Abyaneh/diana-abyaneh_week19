@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 import { loginUser } from "../services/auth";
 import styles from "./loginPage.module.css";
@@ -18,21 +19,21 @@ function LoginPage() {
   const onSubmit = async (data) => {
     try {
       const result = await loginUser(data.username, data.password);
+
       localStorage.setItem("token", result.token);
+
+      const decoded = jwtDecode(result.token);
+      localStorage.setItem("user", decoded.username);
+
       alert("ورود با موفقیت انجام شد!");
       navigate("/dashboard");
-
     } catch (error) {
       console.error("Error:", error);
-      if (error.message?.includes("Invalid")) {
-        alert("نام کاربری یا رمز عبور اشتباه است.");
-      } else {
-        alert("خطا در ورود. دوباره تلاش کنید.");
-      }
+      alert("خطا در ورود. دوباره تلاش کنید.");
     }
   };
 
-   useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       navigate("/dashboard");
