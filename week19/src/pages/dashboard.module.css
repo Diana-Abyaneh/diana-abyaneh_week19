@@ -39,7 +39,7 @@
 
 .userInfo {
   display: flex;
-  flex-direction: column;
+  gap: 10px;
   align-items: center;
   margin: 0 20px;
   padding: 0 20px;
@@ -48,6 +48,15 @@
   justify-content: center;
 }
 
+.userInfo img {
+  width: 40px;
+  height: 40px;
+}
+
+.userInfo span {
+  display: flex;
+  flex-direction: column;
+}
 .userInfo h4 {
   font-weight: 500;
   font-size: 15px;
