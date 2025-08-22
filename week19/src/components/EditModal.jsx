@@ -1,4 +1,3 @@
-// components/EditModal.js
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import styles from "./ConfirmModal.module.css";
