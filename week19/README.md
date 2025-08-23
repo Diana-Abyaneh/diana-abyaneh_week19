@@ -37,7 +37,7 @@ This project lets you manage products (CRUD operations) with a clean UI and mode
 ---
 
 # 📁 Folder Structure
-
+```
 ├── src/
 │ ├── assets/ # SVG icons and static assets
 │ ├── components/ # Reusable UI components (Tables, Forms, Buttons, etc.)
@@ -55,6 +55,7 @@ This project lets you manage products (CRUD operations) with a clean UI and mode
 ├── package-lock.json
 ├── README.md
 └── vite.config.js
+```
 
 ---
 
