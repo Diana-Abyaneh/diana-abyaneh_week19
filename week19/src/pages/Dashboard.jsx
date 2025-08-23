@@ -1,20 +1,24 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useProducts } from "../hooks/useProducts";
-import ProductTable from "../components/ProductTable";
+
+import ProductsTable from "../components/ProductsTable";
+import SearchBar from "../components/SearchBar";
+import Pagination from "../components/Pagination";
 
 import AddProductModal from "../components/AddProductModal";
 import EditProductModal from "../components/EditProductModal";
 import DeleteProductModal from "../components/DeleteProductModal";
 
-import styles from "./Dashboard.module.css";
+import setting from "../assets/setting-3.svg";
+import styles from "./dashboard.module.css";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const {
     products,
-    page,
-    setPage,
     totalPages,
     loading,
     error,
@@ -24,16 +28,16 @@ function Dashboard() {
     handleDelete,
   } = useProducts();
 
-  const [search, setSearch] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
-    fetchProducts({ search: e.target.value, page: 1 });
-  };
+  useEffect(() => {
+    const search = searchParams.get("q") || "";
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    fetchProducts({ search, page });
+  }, [searchParams]);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -43,28 +47,23 @@ function Dashboard() {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <h1>مدیریت کالاها</h1>
-        <div>
-          <span>خوش آمدی {localStorage.getItem("user")}</span>
-          <button onClick={logout}>خروج</button>
-        </div>
-      </header>
+      <SearchBar
+        onSearch={(q) => fetchProducts({ search: q, page: 1 })}
+        userName={localStorage.getItem("user")}
+        onLogout={logout}
+      />
 
-      <div className={styles.actions}>
-        <input
-          type="text"
-          placeholder="جستجوی کالا..."
-          value={search}
-          onChange={handleSearch}
-        />
-        <button onClick={() => setShowAddModal(true)}>افزودن محصول</button>
+      <div className={styles.productManage}>
+        <span className={styles.manageTitle}>
+          <img src={setting} alt="setting icon" />
+          <h3>مدیریت کالا</h3>
+        </span>
+        <button className={styles.addProductBtn}>افزودن محصول</button>
       </div>
-
       {loading && <p>در حال بارگذاری...</p>}
       {error && <p className={styles.error}>{error}</p>}
 
-      <ProductTable
+      <ProductsTable
         products={products}
         onEdit={(p) => {
           setSelectedProduct(p);
@@ -76,17 +75,7 @@ function Dashboard() {
         }}
       />
 
-      <div className={styles.pagination}>
-        <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-          قبلی
-        </button>
-        <span>
-          صفحه {page} از {totalPages}
-        </span>
-        <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>
-          بعدی
-        </button>
-      </div>
+      <Pagination totalPages={totalPages} />
 
       {showAddModal && (
         <AddProductModal

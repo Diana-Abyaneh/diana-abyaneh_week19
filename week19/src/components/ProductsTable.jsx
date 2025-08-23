@@ -1,6 +1,6 @@
 import editVector from "../assets/edit.svg";
 import deleteVector from "../assets/trash.svg";
-import styles from "./ProductTable.module.css";
+import styles from "./ProductsTable.module.css";
 
 function ProductTable({ products, onEdit, onDelete }) {
   if (!products.length) {
