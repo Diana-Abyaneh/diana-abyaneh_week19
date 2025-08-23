@@ -1,12 +1,10 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:3000/products";
+import API from "./axiosInstance";
 
 export const deleteProduct = async (productId) => {
   try {
     const token = localStorage.getItem("token");
     
-    const response = await axios.delete(`${API_URL}/${productId}`, {
+    const response = await API.delete(`/products/${productId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

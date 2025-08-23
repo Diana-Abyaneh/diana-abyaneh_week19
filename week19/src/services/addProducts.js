@@ -1,12 +1,10 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:3000/products";
+import API from "./axiosInstance";
 
 export const addProduct = async (productData) => {
   try {
     const token = localStorage.getItem("token");
     
-    const response = await axios.post(API_URL, productData, {
+    const response = await API.post("/products", productData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
