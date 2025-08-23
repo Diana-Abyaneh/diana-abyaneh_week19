@@ -3,7 +3,6 @@
 A Admin Dashboard built with React 18 + Vite ⚡.
 This project lets you manage products (CRUD operations) with a clean UI and modern tools.
 
----
 
 # ✨ Features
 
@@ -37,7 +36,7 @@ This project lets you manage products (CRUD operations) with a clean UI and mode
 
 ---
 
-### 📁 Folder Structure
+# 📁 Folder Structure
 
 ├── src/
 │ ├── assets/ # SVG icons and static assets
@@ -59,7 +58,7 @@ This project lets you manage products (CRUD operations) with a clean UI and mode
 
 ---
 
-### 🚀 Getting Started
+# 🚀 Getting Started
 
 1️⃣ Clone the repo
 
@@ -81,6 +80,8 @@ npm run dev
 ```
 
 Then open 👉 http://localhost:5173 in your browser.
+
+---
 
 ### 📡 API Integration
 
