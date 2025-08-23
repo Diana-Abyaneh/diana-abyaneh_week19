@@ -2,7 +2,7 @@ import editVector from "../assets/edit.svg";
 import deleteVector from "../assets/trash.svg";
 import styles from "./ProductsTable.module.css";
 
-function ProductTable({ products, onEdit, onDelete }) {
+function ProductsTable({ products, onEdit, onDelete }) {
   if (!products.length) {
     return <div className={styles.emptyState}>هیچ محصولی یافت نشد</div>;
   }
@@ -23,17 +23,14 @@ function ProductTable({ products, onEdit, onDelete }) {
           {products.map((p) => (
             <tr key={p.id}>
               <td>{p.name}</td>
-              <td>{p.quantity || p.stock}</td>
-              <td>{p.price.toLocaleString() * 1000} تومان</td>
+              <td>{p.quantity}</td>
+              <td>{(p.price * 1000).toLocaleString()} تومان</td>
               <td>{p.id}</td>
               <td>
                 <button className={styles.actionBtn} onClick={() => onEdit(p)}>
                   <img src={editVector} alt="ویرایش" />
                 </button>
-                <button
-                  className={styles.actionBtn}
-                  onClick={() => onDelete(p)}
-                >
+                <button className={styles.actionBtn} onClick={() => onDelete(p)}>
                   <img src={deleteVector} alt="حذف" />
                 </button>
               </td>
@@ -45,4 +42,4 @@ function ProductTable({ products, onEdit, onDelete }) {
   );
 }
 
-export default ProductTable;
+export default ProductsTable;
