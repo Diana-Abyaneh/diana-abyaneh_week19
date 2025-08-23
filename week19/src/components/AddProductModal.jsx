@@ -2,24 +2,26 @@ import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import styles from "./ConfirmModal.module.css";
 
-function EditModal({ onClose, onConfirm, isOpen, product }) {
+function AddProductModal({ onClose, onConfirm, isOpen }) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
     setError
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      name: "",
+      quantity: "",
+      price: ""
+    }
+  });
 
   useEffect(() => {
-    if (isOpen && product) {
-      reset({
-        name: product.name,
-        quantity: product.quantity || product.stock,
-        price: product.price
-      });
+    if (isOpen) {
+      reset();
     }
-  }, [isOpen, product, reset]);
+  }, [isOpen, reset]);
 
   if (!isOpen) return null;
 
@@ -28,7 +30,7 @@ function EditModal({ onClose, onConfirm, isOpen, product }) {
       const productData = {
         name: data.name.trim(),
         quantity: parseInt(data.quantity),
-        price: parseFloat(data.price) ,
+        price: parseFloat(data.price),
         stock: parseInt(data.quantity)
       };
       
@@ -38,7 +40,7 @@ function EditModal({ onClose, onConfirm, isOpen, product }) {
     } catch (error) {
       setError("submit", {
         type: "manual",
-        message: error.message || "خطا در ویرایش محصول"
+        message: error.message || "خطا در ایجاد محصول"
       });
     }
   };
@@ -53,7 +55,7 @@ function EditModal({ onClose, onConfirm, isOpen, product }) {
     <div className={styles.modalOverlay} onClick={handleOverlayClick}>
       <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
-          <h2>ویرایش محصول</h2>
+          <h2>ایجاد محصول جدید</h2>
           <button 
             type="button"
             className={styles.closeButton} 
@@ -174,7 +176,7 @@ function EditModal({ onClose, onConfirm, isOpen, product }) {
               className={styles.submitButton}
               disabled={isSubmitting}
             >
-              {isSubmitting ? "در حال ویرایش..." : "ویرایش محصول"}
+              {isSubmitting ? "در حال ایجاد..." : "ایجاد محصول"}
             </button>
           </div>
         </form>
@@ -183,4 +185,4 @@ function EditModal({ onClose, onConfirm, isOpen, product }) {
   );
 }
 
-export default EditModal;
+export default AddProductModal;

@@ -1,7 +1,7 @@
 import styles from "./ConfirmModal.module.css";
 import close from "../assets/Close.svg";
 
-function DeleteModal({ isOpen, onClose, onConfirm, product }) {
+function DeleteProductModal({ isOpen, onClose, onConfirm, product }) {
   if (!isOpen) return null;
 
   const handleOverlayClick = (e) => {
@@ -51,4 +51,4 @@ function DeleteModal({ isOpen, onClose, onConfirm, product }) {
   );
 }
 
-export default DeleteModal;
+export default DeleteProductModal;
