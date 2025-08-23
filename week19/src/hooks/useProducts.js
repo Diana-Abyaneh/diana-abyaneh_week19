@@ -10,13 +10,13 @@ export function useProducts() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
 
-  const fetchProducts = async ({ search = "", page = 1, limit = 10 } = {}) => {
+  const fetchProducts = async ({ searchParam = search, pageParam = page, limit = 10 } = {}) => {
     try {
       setLoading(true);
       setError(null);
-      const result = await getProducts({ page, limit, name: search });
-
+      const result = await getProducts({ page: pageParam, limit, name: searchParam });
       if (result?.data) {
         setProducts(result.data);
         setTotalPages(result.totalPages || 1);
@@ -32,22 +32,34 @@ export function useProducts() {
   };
 
   const handleAdd = async (product) => {
-    await addProduct(product);
-    await fetchProducts({ page });
+    try {
+      await addProduct(product);
+      await fetchProducts({ pageParam: page, searchParam: search });
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   const handleEdit = async (id, product) => {
-    await editProduct(id, product);
-    await fetchProducts({ page });
+    try {
+      await editProduct(id, product);
+      await fetchProducts({ pageParam: page, searchParam: search });
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   const handleDelete = async (id) => {
-    await deleteProduct(id);
-    await fetchProducts({ page });
+    try {
+      await deleteProduct(id);
+      await fetchProducts({ pageParam: page, searchParam: search });
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   useEffect(() => {
-    fetchProducts({ page });
+    fetchProducts();
   }, [page]);
 
   return {
@@ -61,5 +73,7 @@ export function useProducts() {
     handleAdd,
     handleEdit,
     handleDelete,
+    search,
+    setSearch,
   };
 }
