@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import styles from "./ConfirmModal.module.css";
 
-function ConfirmModal({ onClose, onConfirm, isOpen }) {
+function AddModal({ onClose, onConfirm, isOpen }) {
   const {
     register,
     handleSubmit,
@@ -185,4 +185,4 @@ function ConfirmModal({ onClose, onConfirm, isOpen }) {
   );
 }
 
-export default ConfirmModal;
+export default AddModal;
