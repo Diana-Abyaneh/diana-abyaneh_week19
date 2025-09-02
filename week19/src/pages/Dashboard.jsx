@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useProducts } from "../hooks/useProducts";
 
+import { useProducts } from "../hooks/useProducts";
 import ProductsTable from "../components/ProductsTable";
 import SearchBar from "../components/SearchBar";
 import Pagination from "../components/Pagination";
@@ -20,12 +20,14 @@ function Dashboard() {
   const {
     products,
     totalPages,
-    loading,
-    error,
     fetchProducts,
     handleAdd,
     handleEdit,
     handleDelete,
+    page,
+    setPage,
+    search,
+    setSearch,
   } = useProducts();
 
   const [showAddModal, setShowAddModal] = useState(false);
@@ -34,9 +36,11 @@ function Dashboard() {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
-    const search = searchParams.get("q") || "";
-    const page = parseInt(searchParams.get("page") || "1", 10);
-    fetchProducts({ search, page });
+    const query = searchParams.get("q") || "";
+    const pageParam = parseInt(searchParams.get("page") || "1", 10);
+    setSearch(query);
+    setPage(pageParam);
+    fetchProducts({ searchParam: query, pageParam });
   }, [searchParams]);
 
   const logout = () => {
@@ -45,12 +49,25 @@ function Dashboard() {
     navigate("/login");
   };
 
+  const openEditModal = (product) => {
+    setSelectedProduct(product);
+    setShowEditModal(true);
+  };
+
+  const openDeleteModal = (product) => {
+    setSelectedProduct(product);
+    setShowDeleteModal(true);
+  };
+
   return (
     <div className={styles.container}>
       <SearchBar
-        onSearch={(q) => fetchProducts({ search: q, page: 1 })}
         userName={localStorage.getItem("user")}
         onLogout={logout}
+        onSearch={(q) => {
+          setSearch(q);
+          fetchProducts({ searchParam: q, pageParam: 1 });
+        }}
       />
 
       <div className={styles.productManage}>
@@ -58,45 +75,64 @@ function Dashboard() {
           <img src={setting} alt="setting icon" />
           <h3>مدیریت کالا</h3>
         </span>
-        <button className={styles.addProductBtn}>افزودن محصول</button>
+        <button
+          className={styles.addProductBtn}
+          onClick={() => setShowAddModal(true)}
+        >
+          افزودن محصول
+        </button>
       </div>
-      {loading && <p>در حال بارگذاری...</p>}
-      {error && <p className={styles.error}>{error}</p>}
 
       <ProductsTable
         products={products}
-        onEdit={(p) => {
-          setSelectedProduct(p);
-          setShowEditModal(true);
-        }}
-        onDelete={(p) => {
-          setSelectedProduct(p);
-          setShowDeleteModal(true);
+        onEdit={openEditModal}
+        onDelete={openDeleteModal}
+      />
+
+      <Pagination
+        totalPages={totalPages}
+        currentPage={page}
+        onPageChange={setPage}
+      />
+
+      <AddProductModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onConfirm={async (newProduct) => {
+          await handleAdd(newProduct);
+          setShowAddModal(false);
         }}
       />
 
-      <Pagination totalPages={totalPages} />
-
-      {showAddModal && (
-        <AddProductModal
-          onClose={() => setShowAddModal(false)}
-          onSubmit={handleAdd}
-        />
-      )}
-
-      {showEditModal && (
+      {selectedProduct && (
         <EditProductModal
+          isOpen={showEditModal}
           product={selectedProduct}
-          onClose={() => setShowEditModal(false)}
-          onSubmit={(updated) => handleEdit(selectedProduct.id, updated)}
+          onClose={() => {
+            setShowEditModal(false);
+            setSelectedProduct(null);
+          }}
+          onConfirm={async (updatedProduct) => {
+            await handleEdit(selectedProduct.id, updatedProduct);
+            setShowEditModal(false);
+            setSelectedProduct(null);
+          }}
         />
       )}
 
-      {showDeleteModal && (
+      {selectedProduct && (
         <DeleteProductModal
+          isOpen={showDeleteModal}
           product={selectedProduct}
-          onClose={() => setShowDeleteModal(false)}
-          onConfirm={() => handleDelete(selectedProduct.id)}
+          onClose={() => {
+            setShowDeleteModal(false);
+            setSelectedProduct(null);
+          }}
+          onConfirm={async (id) => {
+            await handleDelete(id);
+            setShowDeleteModal(false);
+            setSelectedProduct(null);
+          }}
         />
       )}
     </div>
