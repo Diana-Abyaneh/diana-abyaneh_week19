@@ -93,7 +93,6 @@ function Dashboard() {
         totalPages={totalPages}
         currentPage={page}
         onPageChange={setPage}
-      />
 
       <AddProductModal
         isOpen={showAddModal}
